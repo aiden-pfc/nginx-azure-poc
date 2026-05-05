@@ -9,8 +9,8 @@ on:
 jobs:
   deploy:
     runs-on: [self-hosted, linux, x64, azure-nginx]
-    
-        environment:
+
+    environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'development' }}
 
     steps:
