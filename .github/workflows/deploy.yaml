@@ -29,12 +29,7 @@ jobs:
           for HOST in $HOSTS; do
             echo "Deploying to $ENVIRONMENT server: $HOST"
 
-            rsync -avz \
-              -e "ssh -i ~/.ssh/github_runner_deploy -o StrictHostKeyChecking=no" \
-              ./index.html \
-              ahadmin@$HOST:/tmp/index.html
-
             ssh -i ~/.ssh/github_runner_deploy -o StrictHostKeyChecking=no \
               ahadmin@$HOST \
-              "sudo cp /tmp/index.html /var/www/html/index.html && sudo systemctl reload nginx"
+              "SERVER_NAME=\$(hostname); echo '<h1>${ENVIRONMENT} deployment from GitHub Actions 🚀</h1><p>Server: '\$SERVER_NAME'</p>' | sudo tee /var/www/html/index.html > /dev/null && sudo systemctl reload nginx"
           done
