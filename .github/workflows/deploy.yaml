@@ -9,8 +9,8 @@ on:
 jobs:
   deploy:
     runs-on: [self-hosted, linux, x64, azure-nginx]
-    
-        environment:
+
+    environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'development' }}
 
     steps:
@@ -32,7 +32,12 @@ jobs:
           for HOST in $HOSTS; do
             echo "Deploying to $ENVIRONMENT server: $HOST"
 
+            rsync -avz \
+              -e "ssh -i ~/.ssh/github_runner_deploy -o StrictHostKeyChecking=no" \
+              ./index.html \
+              ahadmin@$HOST:/tmp/index.html
+
             ssh -i ~/.ssh/github_runner_deploy -o StrictHostKeyChecking=no \
               ahadmin@$HOST \
-              "SERVER_NAME=\$(hostname); echo '<h1>${ENVIRONMENT} deployment from GitHub Actions 🚀</h1><p>Server: '\$SERVER_NAME'</p>' | sudo tee /var/www/html/index.html > /dev/null && sudo systemctl reload nginx"
+              "SERVER_NAME=\$(hostname); sudo cp /tmp/index.html /var/www/html/index.html && echo '<p>Server: '\$SERVER_NAME'</p>' | sudo tee -a /var/www/html/index.html > /dev/null && sudo systemctl reload nginx"
           done
