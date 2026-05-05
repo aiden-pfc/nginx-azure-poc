@@ -17,10 +17,10 @@ jobs:
       - name: Set target hosts
         run: |
           if [ "${GITHUB_REF_NAME}" = "develop" ]; then
-            echo "HOSTS=10.10.2.4 10.10.2.5" >> $GITHUB_ENV
+            echo "HOSTS=10.10.2.6 10.10.2.7" >> $GITHUB_ENV
             echo "ENVIRONMENT=dev" >> $GITHUB_ENV
           elif [ "${GITHUB_REF_NAME}" = "main" ]; then
-            echo "HOSTS=10.10.2.6 10.10.2.7" >> $GITHUB_ENV
+            echo "HOSTS=10.10.2.4 10.10.2.5" >> $GITHUB_ENV
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
           fi
 
